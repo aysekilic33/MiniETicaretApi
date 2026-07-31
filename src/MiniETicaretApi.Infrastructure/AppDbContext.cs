@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MiniETicaretApi.Application.Interfaces;
 using MiniETicaretApi.Domain;
 
 namespace MiniETicaretApi.Infrastructure;
 
-public class AppDbContext : DbContext
+public class AppDbContext : DbContext, IAppDbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -19,36 +20,30 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Kullanıcı - Sipariş (1 kullanıcı -> çok sipariş)
         modelBuilder.Entity<Siparis>()
             .HasOne(s => s.Kullanici)
             .WithMany(k => k.Siparisler)
             .HasForeignKey(s => s.KullaniciId);
 
-        // Siparis - SiparisKalemi (1 sipariş -> çok kalem)
         modelBuilder.Entity<SiparisKalemi>()
             .HasOne(sk => sk.Siparis)
             .WithMany(s => s.Kalemler)
             .HasForeignKey(sk => sk.SiparisId);
 
-        // Urun - SiparisKalemi (1 ürün -> çok kalemde geçebilir)
         modelBuilder.Entity<SiparisKalemi>()
             .HasOne(sk => sk.Urun)
             .WithMany()
             .HasForeignKey(sk => sk.UrunId);
 
-        // Kategori - Urun (1 kategori -> çok ürün)
         modelBuilder.Entity<Urun>()
             .HasOne(u => u.Kategori)
             .WithMany(k => k.Urunler)
             .HasForeignKey(u => u.KategoriId);
 
-        // Email'in benzersiz (unique) olması
         modelBuilder.Entity<Kullanici>()
             .HasIndex(k => k.Email)
             .IsUnique();
 
-        // Fiyat alanı için decimal hassasiyeti (SQL Server uyarısı almamak için)
         modelBuilder.Entity<Urun>()
             .Property(u => u.Fiyat)
             .HasPrecision(18, 2);
