@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MiniETicaretApi.Application/MiniETicaretApi.Application.csproj" />
+    <Project Path="src/MiniETicaretApi.Domain/MiniETicaretApi.Domain.csproj" />
+    <Project Path="src/MiniETicaretApi.Infrastructure/MiniETicaretApi.Infrastructure.csproj" />
+  </Folder>
+</Solution>

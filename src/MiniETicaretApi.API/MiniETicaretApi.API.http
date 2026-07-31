@@ -1,0 +1,6 @@
+@MiniETicaretApi.API_HostAddress = http://localhost:5014
+
+GET {{MiniETicaretApi.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
