@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MiniETicaretApi.Application.Common;
 using MiniETicaretApi.Application.DTOs;
 using MiniETicaretApi.Application.Interfaces;
 using MiniETicaretApi.Domain;
@@ -16,13 +17,13 @@ public class AuthService : IAuthService
         _tokenService = tokenService;
     }
 
-    public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
+    public async Task<Result<AuthResponse>> RegisterAsync(RegisterRequest request)
     {
         var mevcutKullanici = await _context.Kullanicilar
             .FirstOrDefaultAsync(k => k.Email == request.Email);
 
         if (mevcutKullanici != null)
-            throw new InvalidOperationException("Bu email adresi zaten kayıtlı.");
+            return Result<AuthResponse>.Basarisiz("Bu email adresi zaten kayıtlı.");
 
         var kullanici = new Kullanici
         {
@@ -36,20 +37,22 @@ public class AuthService : IAuthService
         await _context.SaveChangesAsync();
 
         var token = _tokenService.TokenUret(kullanici);
+        var response = new AuthResponse(token, kullanici.AdSoyad, kullanici.Email, kullanici.Rol.ToString());
 
-        return new AuthResponse(token, kullanici.AdSoyad, kullanici.Email, kullanici.Rol.ToString());
+        return Result<AuthResponse>.Basarili_(response);
     }
 
-    public async Task<AuthResponse> LoginAsync(LoginRequest request)
+    public async Task<Result<AuthResponse>> LoginAsync(LoginRequest request)
     {
         var kullanici = await _context.Kullanicilar
             .FirstOrDefaultAsync(k => k.Email == request.Email);
 
         if (kullanici == null || !BCrypt.Net.BCrypt.Verify(request.Sifre, kullanici.SifreHash))
-            throw new UnauthorizedAccessException("Email veya şifre hatalı.");
+            return Result<AuthResponse>.Basarisiz("Email veya şifre hatalı.");
 
         var token = _tokenService.TokenUret(kullanici);
+        var response = new AuthResponse(token, kullanici.AdSoyad, kullanici.Email, kullanici.Rol.ToString());
 
-        return new AuthResponse(token, kullanici.AdSoyad, kullanici.Email, kullanici.Rol.ToString());
+        return Result<AuthResponse>.Basarili_(response);
     }
 }

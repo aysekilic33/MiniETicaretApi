@@ -2,12 +2,22 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MiniETicaretApi.API.Middlewares;
 using MiniETicaretApi.Application.Interfaces;
 using MiniETicaretApi.Application.Options;
 using MiniETicaretApi.Application.Services;
 using MiniETicaretApi.Infrastructure;
+using Serilog;
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog();
 
 // Veritabaný baðlantýsý
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -49,6 +59,10 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
 {
