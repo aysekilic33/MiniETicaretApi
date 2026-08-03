@@ -1,6 +1,28 @@
-@MiniETicaretApi.API_HostAddress = http://localhost:5014
+@baseUrl = https://localhost:7163
 
-GET {{MiniETicaretApi.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### Kullanýcý Kaydý (Register)
+POST {{baseUrl}}/api/Auth/register
+Content-Type: application/json
 
-###
+{
+  "adSoyad": "Mehmet Demir",
+  "email": "mehmet@test.com",
+  "sifre": "Sifre123!"
+}
+
+### Kullanýcý Giriþi (Login)
+# @name login
+POST {{baseUrl}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "email": "mehmet@test.com",
+  "sifre": "Sifre123!"
+}
+
+### Korumalý Endpoint - Token'sýz (401 beklenir)
+GET {{baseUrl}}/api/Test/gizli
+
+### Korumalý Endpoint - Token'lý (200 beklenir)
+GET {{baseUrl}}/api/Test/gizli
+Authorization: Bearer {{login.response.body.$.token}}
