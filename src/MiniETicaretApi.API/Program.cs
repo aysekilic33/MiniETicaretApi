@@ -29,7 +29,10 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 
 // Servisler
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IKategoriService, KategoriService>();
 builder.Services.AddScoped<ITokenService, MiniETicaretApi.Infrastructure.TokenService>();
+builder.Services.AddScoped<IUrunService, UrunService>();
+builder.Services.AddScoped<ISiparisService,SiparisService>();
 
 // JWT Authentication
 var jwtSection = builder.Configuration.GetSection("Jwt");

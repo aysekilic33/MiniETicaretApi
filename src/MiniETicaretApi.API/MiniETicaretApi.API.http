@@ -26,3 +26,15 @@ GET {{baseUrl}}/api/Test/gizli
 ### Korumalý Endpoint - Token'lý (200 beklenir)
 GET {{baseUrl}}/api/Test/gizli
 Authorization: Bearer {{login.response.body.$.token}}
+
+### Kategori Ekle (Admin gerekli - þimdilik Mehmet Musteri, 403 alabiliriz)
+POST {{baseUrl}}/api/Kategori
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiTWVobWV0IERlbWlyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoibWVobWV0QHRlc3QuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3ODU3NTg1MjAsImlzcyI6Ik1pbmlFVGljYXJldEFwaSIsImF1ZCI6Ik1pbmlFVGljYXJldEFwaUt1bGxhbmljaWxhcmkifQ.l29m7cIXln8VO-QQuiGdk7tE36UFPTa71m5h8gj7VUk
+Content-Type: application/json
+
+{
+  "ad": "Elektronik"
+}
+
+### Kategorileri Listele (herkese açýk)
+GET {{baseUrl}}/api/Kategori
